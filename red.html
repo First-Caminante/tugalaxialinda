@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Feliz Día de las Flores Amarillas | Galaxia 3D</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav class="galaxy-nav">
+        <a href="index.html" class="galaxy-link" id="link-yellow">🌻 Galaxia Amarilla</a>
+        <a href="blue.html" class="galaxy-link" id="link-blue">💙 Galaxia Azul</a>
+        <a href="red.html" class="galaxy-link" id="link-red">🌹 Galaxia Roja</a>
+    </nav>
+
+    <!-- Solo mensaje de feliz día, sin panel -->
+    <div class="greeting">
+        🌹 Feliz día de las Rosas Rojas 🌹
+        <small>✨ Un universo de estrellas para ti ✨</small>
+    </div>
+
+    <div class="badge-control">🌀 360° | Galaxia de Rosas Rojas</div>
+    <div class="control-hint">🖱️ Arrastra para rotar | Click en una flor para un mensaje</div>
+
+    <!-- Carta de Amor (Emergente) -->
+    <div id="love-letter" class="love-letter-overlay" onclick="closeLoveLetter()">
+        <div class="love-letter-paper" onclick="event.stopPropagation()">
+            <div class="wax-seal">💙</div>
+            <p id="letter-content">Mensaje de amor</p>
+            <button class="close-btn" onclick="closeLoveLetter()">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Carta Especial (Centro) -->
+    <div id="special-letter" class="love-letter-overlay special" onclick="closeSpecialLetter()">
+        <div class="love-letter-paper" onclick="event.stopPropagation()">
+            <div class="wax-seal">💙</div>
+            <h2 class="special-title">Para ti, mi universo</h2>
+            <div id="special-content">
+                <p>En el vasto silencio del cosmos lejano,</p>
+                <p>donde orbitan estrellas en danza sutil,</p>
+                <p>fue tu luz la que vino a tomarme la mano,</p>
+                <p>transformando mi noche en un dulce abril.</p>
+                <br>
+                <p>No hay flor en la tierra ni estrella en el cielo,</p>
+                <p>que iguale el misterio que esconde tu voz.</p>
+                <p>Eres tú mi galaxia, mi paz, mi consuelo,</p>
+                <p>el latido más bello que ha creado Dios.</p>
+            </div>
+            <button class="close-btn special-btn" onclick="closeSpecialLetter()">Guardar en el corazón</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('link-red').classList.add('active', 'red');
+    </script>
+
+    <div class="music-player" id="music-player">
+        <button class="player-btn" id="btn-prev">⏮</button>
+        <button class="player-btn" id="btn-play">▶️</button>
+        <button class="player-btn" id="btn-next">⏭</button>
+        <div class="track-info">
+            <span class="track-name" id="track-name">Cargando...</span>
+            <span class="track-status" id="track-status">Pausado</span>
+        </div>
+    </div>
+    <audio id="local-audio-player" src="cancion_principal_roja.mp3"></audio>
+    <div id="yt-player-container"></div>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+        const playlist = [
+            { isLocal: true, name: 'Canción Principal' },
+            { id: 'snFhcHHdzT0', name: 'Segunda Canción' },
+            { id: 'Y4fm-ebvAOs', name: 'Tercera Canción' }
+        ];
+        let currentTrack = 0;
+        let player;
+        const localPlayer = document.getElementById('local-audio-player');
+        const btnPlay = document.getElementById('btn-play');
+        const statusText = document.getElementById('track-status');
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('yt-player-container', {
+                height: '150', width: '250',
+                playerVars: { 'autoplay': 0, 'controls': 0, 'disablekb': 1 },
+                events: {
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+            updateUI();
+        }
+
+        function onPlayerStateChange(event) {
+            if (!playlist[currentTrack].isLocal) {
+                if (event.data == YT.PlayerState.PLAYING) {
+                    btnPlay.innerText = '⏸'; statusText.innerText = 'Reproduciendo';
+                } else {
+                    btnPlay.innerText = '▶️'; statusText.innerText = 'Pausado';
+                }
+                if (event.data == YT.PlayerState.ENDED) nextTrack();
+            }
+        }
+
+        localPlayer.addEventListener('play', () => { btnPlay.innerText = '⏸'; statusText.innerText = 'Reproduciendo'; });
+        localPlayer.addEventListener('pause', () => { btnPlay.innerText = '▶️'; statusText.innerText = 'Pausado'; });
+        localPlayer.addEventListener('ended', nextTrack);
+
+        btnPlay.addEventListener('click', () => {
+            if (playlist[currentTrack].isLocal) {
+                localPlayer.paused ? localPlayer.play() : localPlayer.pause();
+            } else {
+                if (player && player.getPlayerState) player.getPlayerState() === YT.PlayerState.PLAYING ? player.pauseVideo() : player.playVideo();
+            }
+        });
+
+        document.getElementById('btn-next').addEventListener('click', nextTrack);
+        document.getElementById('btn-prev').addEventListener('click', prevTrack);
+
+        function updateUI() {
+            document.getElementById('track-name').innerText = playlist[currentTrack].name;
+            btnPlay.innerText = '▶️'; statusText.innerText = 'Pausado';
+        }
+
+        function nextTrack() { currentTrack = (currentTrack + 1) % playlist.length; loadTrack(); }
+        function prevTrack() { currentTrack = (currentTrack - 1 + playlist.length) % playlist.length; loadTrack(); }
+        function loadTrack() {
+            updateUI();
+            if (playlist[currentTrack].isLocal) {
+                if (player && player.pauseVideo) player.pauseVideo();
+                localPlayer.currentTime = 0;
+            } else {
+                localPlayer.pause();
+                player.loadVideoById(playlist[currentTrack].id);
+            }
+        }
+    </script>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module" src="main_red.js"></script>
+</body>
+
+</html>

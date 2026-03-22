@@ -1,0 +1,357 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    font-family: 'Poppins', 'Segoe UI', 'Quicksand', 'Fredoka One', cursive, sans-serif;
+    color: #fff;
+}
+
+canvas {
+    display: block;
+}
+
+/* Menú de Navegación de Galaxias */
+.galaxy-nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+    padding: 15px 0 30px 0;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    z-index: 50;
+    font-family: 'Poppins', sans-serif;
+}
+
+.galaxy-link {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 8px 20px;
+    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.galaxy-link:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+}
+
+.galaxy-link.active.yellow {
+    background: linear-gradient(135deg, #FFB347, #FFCC33);
+    color: #332000;
+    box-shadow: 0 0 15px rgba(255, 179, 71, 0.6);
+    border-color: transparent;
+}
+
+.galaxy-link.active.blue {
+    background: linear-gradient(135deg, #00C9FF, #92FE9D);
+    color: #002233;
+    box-shadow: 0 0 15px rgba(0, 201, 255, 0.6);
+    border-color: transparent;
+}
+
+.galaxy-link.active.red {
+    background: linear-gradient(135deg, #FF416C, #FF4B2B);
+    color: #33000b;
+    box-shadow: 0 0 15px rgba(255, 65, 108, 0.6);
+    border-color: transparent;
+}
+
+/* Mensaje central: Feliz día */
+.greeting {
+    position: absolute;
+    top: 70px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    pointer-events: none;
+    z-index: 20;
+    font-size: 2.5rem;
+    font-weight: 800;
+    text-shadow: 0 0 20px rgba(0, 0, 0, 0.5), 0 0 5px #ffaa33;
+    background: linear-gradient(135deg, #FFE55C, #FFB347);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: -0.5px;
+    animation: fadeInDown 1s ease-out;
+}
+
+.greeting small {
+    font-size: 1.1rem;
+    display: block;
+    color: #FFDE7A;
+    background: none;
+    -webkit-background-clip: unset;
+    background-clip: unset;
+    text-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Controles y badge */
+.badge-control {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    border-radius: 40px;
+    padding: 6px 16px;
+    font-size: 0.7rem;
+    pointer-events: none;
+    font-weight: 500;
+    color: #FFD966;
+    border: 1px solid #FFD96680;
+    z-index: 15;
+}
+
+.control-hint {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    padding: 5px 12px;
+    border-radius: 30px;
+    font-size: 0.7rem;
+    pointer-events: none;
+    white-space: nowrap;
+    font-family: monospace;
+    letter-spacing: 1px;
+    color: #FFE0A3;
+    z-index: 15;
+}
+
+@media (max-width: 700px) {
+    .greeting {
+        font-size: 1.6rem;
+        top: 20px;
+    }
+
+    .greeting small {
+        font-size: 0.8rem;
+    }
+
+    .badge-control {
+        font-size: 0.6rem;
+    }
+
+    .control-hint {
+        font-size: 0.6rem;
+        white-space: nowrap;
+    }
+}
+
+/* Carta de amor flotante */
+.love-letter-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.love-letter-overlay.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.love-letter-paper {
+    background: #FFFDF5;
+    /* Papel crema */
+    width: 80%;
+    max-width: 400px;
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 0 40px rgba(230, 200, 100, 0.2);
+    text-align: center;
+    position: relative;
+    transform: translateY(50px) scale(0.9);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid #E6C27A;
+    color: #4A3B2C;
+}
+
+.love-letter-overlay.visible .love-letter-paper {
+    transform: translateY(0) scale(1);
+}
+
+.wax-seal {
+    font-size: 3rem;
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+#letter-content {
+    font-family: 'Quicksand', cursive, sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1.5;
+    margin: 20px 0;
+    color: #5D4037;
+}
+
+.close-btn {
+    background: #FFB347;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 15px;
+    box-shadow: 0 4px 10px rgba(255, 179, 71, 0.4);
+    transition: background 0.2s;
+}
+
+.close-btn:hover {
+    background: #FFA000;
+}
+
+/* Carta súper especial (Centro) */
+.love-letter-overlay.special .love-letter-paper {
+    max-width: 550px;
+    background: linear-gradient(135deg, #FFFDF5, #FFF5E6);
+    border: 3px solid #FFD700;
+    box-shadow: 0 15px 60px rgba(0, 0, 0, 0.8), inset 0 0 60px rgba(255, 215, 0, 0.3);
+    border-radius: 16px;
+    padding: 50px 40px;
+}
+
+.special-title {
+    font-family: 'Fredoka One', cursive, sans-serif;
+    color: #D35400;
+    margin-bottom: 20px;
+    font-size: 2rem;
+    text-shadow: 0 2px 4px rgba(211, 84, 0, 0.2);
+}
+
+#special-content p {
+    font-family: 'Quicksand', cursive, sans-serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 5px 0;
+    color: #4A3B2C;
+}
+
+.love-letter-overlay.special .wax-seal {
+    font-size: 4rem;
+    top: -35px;
+    text-shadow: 0 6px 15px rgba(0, 100, 255, 0.5);
+}
+
+.special-btn {
+    background: linear-gradient(90deg, #FF8C00, #E65100) !important;
+    font-size: 1.1rem !important;
+    padding: 12px 25px !important;
+    margin-top: 30px !important;
+    box-shadow: 0 6px 15px rgba(230, 81, 0, 0.5) !important;
+}
+
+.special-btn:hover {
+    background: linear-gradient(90deg, #E65100, #BF360C) !important;
+}
+
+/* Reproductor de Música */
+.music-player {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 100;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    color: white;
+    font-family: 'Poppins', sans-serif;
+}
+
+.player-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.2s, color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.player-btn:hover {
+    transform: scale(1.1);
+    color: #FFD700;
+}
+
+.track-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 120px;
+}
+
+.track-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}
+
+.track-status {
+    font-size: 0.7rem;
+    opacity: 0.7;
+}
+
+#yt-player-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 250px;
+    height: 150px;
+    opacity: 0.001;
+    /* Casi invisible para engañar al bloqueo de YouTube */
+    pointer-events: none;
+    z-index: -10;
+}
