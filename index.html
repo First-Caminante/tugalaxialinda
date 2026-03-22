@@ -4,11 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Feliz Día de las Flores Amarillas | Galaxia 3D</title>
+    <title>Feliz Día de las Flores Amarillas</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+    <!-- Overlay de Entrada para Autoplay -->
+    <div id="entry-overlay">
+        <div class="entry-content">
+            <h1>Bienvenida a la Galaxia Amarilla</h1>
+            <button id="btn-enter" class="btn-enter">Empezar Viaje ✨</button>
+        </div>
+    </div>
     <nav class="galaxy-nav">
         <a href="index.html" class="galaxy-link" id="link-yellow">🌻 Galaxia Amarilla</a>
         <a href="blue.html" class="galaxy-link" id="link-blue">💙 Galaxia Azul</a>
@@ -17,8 +24,8 @@
 
     <!-- Solo mensaje de feliz día, sin panel -->
     <div class="greeting">
-        🌻 Feliz día de las Flores Amarillas 🌻
-        <small>✨ Un ramo de estrellas para ti ✨</small>
+        🌻 Feliz día de las Flores Amarillas Karina🌻
+        <small>✨ Un ramo de estrellas para ti Linda✨</small>
     </div>
 
     <div class="badge-control">🌀 360° | Galaxia de Girasoles</div>
@@ -103,6 +110,15 @@
             }
             if (event.data == YT.PlayerState.ENDED) nextTrack();
         }
+
+        document.getElementById('btn-enter').addEventListener('click', () => {
+            document.getElementById('entry-overlay').classList.add('hidden');
+            if (player && player.getPlayerState) {
+                if (player.getPlayerState() !== YT.PlayerState.PLAYING) {
+                    player.playVideo();
+                }
+            }
+        });
 
         document.getElementById('btn-play').addEventListener('click', () => {
             if (player && player.getPlayerState) player.getPlayerState() === YT.PlayerState.PLAYING ? player.pauseVideo() : player.playVideo();

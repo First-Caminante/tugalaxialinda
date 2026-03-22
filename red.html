@@ -9,6 +9,13 @@
 </head>
 
 <body>
+    <!-- Overlay de Entrada para Autoplay -->
+    <div id="entry-overlay" class="red-theme">
+        <div class="entry-content">
+            <h1>Bienvenida a la Galaxia Roja</h1>
+            <button id="btn-enter" class="btn-enter">Empezar Viaje ✨</button>
+        </div>
+    </div>
     <nav class="galaxy-nav">
         <a href="index.html" class="galaxy-link" id="link-yellow">🌻 Galaxia Amarilla</a>
         <a href="blue.html" class="galaxy-link" id="link-blue">💙 Galaxia Azul</a>
@@ -17,8 +24,8 @@
 
     <!-- Solo mensaje de feliz día, sin panel -->
     <div class="greeting">
-        🌹 Feliz día de las Rosas Rojas 🌹
-        <small>✨ Un universo de estrellas para ti ✨</small>
+        🌹 YO QUIERO QUE TENGAS TODAS LAS FLORES PARA TI 🌹
+        <small>✨ Un universo de estrellas ROSAS para ti ✨</small>
     </div>
 
     <div class="badge-control">🌀 360° | Galaxia de Rosas Rojas</div>
@@ -107,6 +114,21 @@
         localPlayer.addEventListener('play', () => { btnPlay.innerText = '⏸'; statusText.innerText = 'Reproduciendo'; });
         localPlayer.addEventListener('pause', () => { btnPlay.innerText = '▶️'; statusText.innerText = 'Pausado'; });
         localPlayer.addEventListener('ended', nextTrack);
+
+        document.getElementById('btn-enter').addEventListener('click', () => {
+            document.getElementById('entry-overlay').classList.add('hidden');
+            if (playlist[currentTrack].isLocal) {
+                if (localPlayer.paused) {
+                    localPlayer.play();
+                }
+            } else {
+                if (player && player.getPlayerState) {
+                    if (player.getPlayerState() !== YT.PlayerState.PLAYING) {
+                        player.playVideo();
+                    }
+                }
+            }
+        });
 
         btnPlay.addEventListener('click', () => {
             if (playlist[currentTrack].isLocal) {

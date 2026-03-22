@@ -9,6 +9,13 @@
 </head>
 
 <body>
+    <!-- Overlay de Entrada para Autoplay -->
+    <div id="entry-overlay" class="blue-theme">
+        <div class="entry-content">
+            <h1>Bienvenida a la Galaxia Azul</h1>
+            <button id="btn-enter" class="btn-enter">Empezar Viaje ✨</button>
+        </div>
+    </div>
     <nav class="galaxy-nav">
         <a href="index.html" class="galaxy-link" id="link-yellow">🌻 Galaxia Amarilla</a>
         <a href="blue.html" class="galaxy-link" id="link-blue">💙 Galaxia Azul</a>
@@ -17,7 +24,7 @@
 
     <!-- Solo mensaje de feliz día, sin panel -->
     <div class="greeting">
-        💙 Feliz día de las Rosas Azules 💙
+        💙 TAMBIEN TE MERECES ESTE LINDA 💙
         <small>✨ Un universo de estrellas para ti ✨</small>
     </div>
 
@@ -104,6 +111,15 @@
             }
             if (event.data == YT.PlayerState.ENDED) nextTrack();
         }
+
+        document.getElementById('btn-enter').addEventListener('click', () => {
+            document.getElementById('entry-overlay').classList.add('hidden');
+            if (player && player.getPlayerState) {
+                if (player.getPlayerState() !== YT.PlayerState.PLAYING) {
+                    player.playVideo();
+                }
+            }
+        });
 
         document.getElementById('btn-play').addEventListener('click', () => {
             if (player && player.getPlayerState) player.getPlayerState() === YT.PlayerState.PLAYING ? player.pauseVideo() : player.playVideo();
