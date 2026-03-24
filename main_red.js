@@ -565,20 +565,20 @@ function createTextSprite(message) {
 }
 
 const phrasesPool = [
-    "Eres mi estrella favorita",
-    "Brillas más que esta galaxia",
-    "Mi universo es más hermoso contigo",
-    "Tú le das color a mi vida",
-    "Mi flor preciosa",
-    "Te elegiría en cada universo",
+    "Eres mi estrellita favorita",
+    "Brillas más que esta galaxia, muchoooo",
+    "Mi universo siempre es más hermoso contigo",
+    "Tú le das color a mi vida gracias linda..",
+    "Princesa de mi corazón",
+    "Te elegiría en cada universo alternativo :)",
     "Haces que mi mundo gire",
-    "Eres la luz de mis astros",
+    "Karina de mi vida",
     "Un amor infinito como el espacio",
-    "Mi pedacito de cielo",
-    "A la luna y de regreso",
-    "La casualidad más bonita del cosmos",
-    "Tu sonrisa ilumina mi universo",
-    "Cada estrella es un te quiero"
+    "Mi linda Karina",
+    "A la luna y de regreso pero contigo eh",
+    "Mi casualidad favorita siempre fuiste tu",
+    "Tu sonrisa ilumina mi vida ",
+    "Cada estrella en el fondo es un te quiero"
 ];
 
 const phrasesGroup = new THREE.Group();
@@ -798,4 +798,4 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-console.log('🌻 Galaxia de Girasoles - Feliz día de las Flores Amarillas (Mejorado)');
+console.log('tu galaxia de flores bonita...');

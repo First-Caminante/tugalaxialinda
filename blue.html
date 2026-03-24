@@ -73,66 +73,63 @@
             <span class="track-status" id="track-status">Pausado</span>
         </div>
     </div>
-    <div id="yt-player-container"></div>
-
-    <script src="https://www.youtube.com/iframe_api"></script>
+    <audio id="local-audio-player" src=""></audio>
     <script>
         const playlist = [
-            { id: 'cXWwAjwJe4E', name: 'Canción Principal' },
-            { id: 'eJn9xGZIwBY', name: 'Segunda Canción' },
-            { id: 'F0rwOsAteXM', name: 'Tercera Canción' }
+            { src: 'cancion_principal_azul.mp3', name: 'Canción Principal' },
+            { src: 'segunda_cancion_azul.mp3', name: 'Segunda Canción' },
+            { src: 'tercera_cancion_azul.mp3', name: 'Tercera Canción' }
         ];
         let currentTrack = 0;
-        let player;
 
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('yt-player-container', {
-                height: '150', width: '250',
-                videoId: playlist[currentTrack].id,
-                playerVars: { 'autoplay': 0, 'controls': 0, 'disablekb': 1 },
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
-                }
-            });
+        const localPlayer = document.getElementById('local-audio-player');
+        const btnPlay = document.getElementById('btn-play');
+        const statusText = document.getElementById('track-status');
+        const trackNameText = document.getElementById('track-name');
+
+        function updateUI() {
+            trackNameText.innerText = playlist[currentTrack].name;
         }
 
-        function onPlayerReady(event) {
-            document.getElementById('track-name').innerText = playlist[currentTrack].name;
-        }
-
-        function onPlayerStateChange(event) {
-            const btn = document.getElementById('btn-play');
-            const status = document.getElementById('track-status');
-            if (event.data == YT.PlayerState.PLAYING) {
-                btn.innerText = '⏸'; status.innerText = 'Reproduciendo';
-            } else {
-                btn.innerText = '▶️'; status.innerText = 'Pausado';
-            }
-            if (event.data == YT.PlayerState.ENDED) nextTrack();
-        }
+        localPlayer.addEventListener('play', () => { btnPlay.innerText = '⏸'; statusText.innerText = 'Reproduciendo'; });
+        localPlayer.addEventListener('pause', () => { btnPlay.innerText = '▶️'; statusText.innerText = 'Pausado'; });
+        localPlayer.addEventListener('ended', nextTrack);
 
         document.getElementById('btn-enter').addEventListener('click', () => {
             document.getElementById('entry-overlay').classList.add('hidden');
-            if (player && player.getPlayerState) {
-                if (player.getPlayerState() !== YT.PlayerState.PLAYING) {
-                    player.playVideo();
-                }
+            if (!localPlayer.src || localPlayer.src.endsWith('undefined') || localPlayer.src === window.location.href) {
+                localPlayer.src = playlist[currentTrack].src;
             }
+            updateUI();
+            localPlayer.play();
         });
 
-        document.getElementById('btn-play').addEventListener('click', () => {
-            if (player && player.getPlayerState) player.getPlayerState() === YT.PlayerState.PLAYING ? player.pauseVideo() : player.playVideo();
+        btnPlay.addEventListener('click', () => {
+            if (!localPlayer.src || localPlayer.src.endsWith('undefined') || localPlayer.src === window.location.href) {
+                localPlayer.src = playlist[currentTrack].src;
+            }
+            localPlayer.paused ? localPlayer.play() : localPlayer.pause();
         });
+
         document.getElementById('btn-next').addEventListener('click', nextTrack);
         document.getElementById('btn-prev').addEventListener('click', prevTrack);
 
-        function nextTrack() { currentTrack = (currentTrack + 1) % playlist.length; loadTrack(); }
-        function prevTrack() { currentTrack = (currentTrack - 1 + playlist.length) % playlist.length; loadTrack(); }
-        function loadTrack() {
-            document.getElementById('track-name').innerText = playlist[currentTrack].name;
-            player.loadVideoById(playlist[currentTrack].id);
+        function nextTrack() {
+            currentTrack = (currentTrack + 1) % playlist.length;
+            loadTrack();
         }
+        function prevTrack() {
+            currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
+            loadTrack();
+        }
+        function loadTrack() {
+            localPlayer.src = playlist[currentTrack].src;
+            updateUI();
+            localPlayer.play();
+        }
+
+        // Initialize UI
+        updateUI();
     </script>
 
     <script type="importmap">

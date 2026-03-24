@@ -74,41 +74,21 @@
         </div>
     </div>
     <audio id="local-audio-player" src="cancion_principal_roja.mp3"></audio>
-    <div id="yt-player-container"></div>
-
-    <script src="https://www.youtube.com/iframe_api"></script>
     <script>
         const playlist = [
-            { isLocal: true, name: 'Canción Principal' },
-            { id: 'snFhcHHdzT0', name: 'Segunda Canción' },
-            { id: 'Y4fm-ebvAOs', name: 'Tercera Canción' }
+            { src: 'cancion_principal_roja.mp3', name: 'Canción Principal' },
+            { src: 'segunda_cancion_roja.mp3', name: 'Segunda Canción' },
+            { src: 'tercera_cancion_roja.mp3', name: 'Tercera Canción' }
         ];
         let currentTrack = 0;
-        let player;
+
         const localPlayer = document.getElementById('local-audio-player');
         const btnPlay = document.getElementById('btn-play');
         const statusText = document.getElementById('track-status');
+        const trackNameText = document.getElementById('track-name');
 
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('yt-player-container', {
-                height: '150', width: '250',
-                playerVars: { 'autoplay': 0, 'controls': 0, 'disablekb': 1 },
-                events: {
-                    'onStateChange': onPlayerStateChange
-                }
-            });
-            updateUI();
-        }
-
-        function onPlayerStateChange(event) {
-            if (!playlist[currentTrack].isLocal) {
-                if (event.data == YT.PlayerState.PLAYING) {
-                    btnPlay.innerText = '⏸'; statusText.innerText = 'Reproduciendo';
-                } else {
-                    btnPlay.innerText = '▶️'; statusText.innerText = 'Pausado';
-                }
-                if (event.data == YT.PlayerState.ENDED) nextTrack();
-            }
+        function updateUI() {
+            trackNameText.innerText = playlist[currentTrack].name;
         }
 
         localPlayer.addEventListener('play', () => { btnPlay.innerText = '⏸'; statusText.innerText = 'Reproduciendo'; });
@@ -117,47 +97,41 @@
 
         document.getElementById('btn-enter').addEventListener('click', () => {
             document.getElementById('entry-overlay').classList.add('hidden');
-            if (playlist[currentTrack].isLocal) {
-                if (localPlayer.paused) {
-                    localPlayer.play();
-                }
+            if (localPlayer.src && localPlayer.src.includes(playlist[currentTrack].src)) {
+                localPlayer.play();
             } else {
-                if (player && player.getPlayerState) {
-                    if (player.getPlayerState() !== YT.PlayerState.PLAYING) {
-                        player.playVideo();
-                    }
-                }
+                localPlayer.src = playlist[currentTrack].src;
+                updateUI();
+                localPlayer.play();
             }
         });
 
         btnPlay.addEventListener('click', () => {
-            if (playlist[currentTrack].isLocal) {
-                localPlayer.paused ? localPlayer.play() : localPlayer.pause();
-            } else {
-                if (player && player.getPlayerState) player.getPlayerState() === YT.PlayerState.PLAYING ? player.pauseVideo() : player.playVideo();
+            if (!localPlayer.src || localPlayer.src.endsWith('undefined') || localPlayer.src === window.location.href) {
+                localPlayer.src = playlist[currentTrack].src;
             }
+            localPlayer.paused ? localPlayer.play() : localPlayer.pause();
         });
 
         document.getElementById('btn-next').addEventListener('click', nextTrack);
         document.getElementById('btn-prev').addEventListener('click', prevTrack);
 
-        function updateUI() {
-            document.getElementById('track-name').innerText = playlist[currentTrack].name;
-            btnPlay.innerText = '▶️'; statusText.innerText = 'Pausado';
+        function nextTrack() {
+            currentTrack = (currentTrack + 1) % playlist.length;
+            loadTrack();
+        }
+        function prevTrack() {
+            currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
+            loadTrack();
+        }
+        function loadTrack() {
+            localPlayer.src = playlist[currentTrack].src;
+            updateUI();
+            localPlayer.play();
         }
 
-        function nextTrack() { currentTrack = (currentTrack + 1) % playlist.length; loadTrack(); }
-        function prevTrack() { currentTrack = (currentTrack - 1 + playlist.length) % playlist.length; loadTrack(); }
-        function loadTrack() {
-            updateUI();
-            if (playlist[currentTrack].isLocal) {
-                if (player && player.pauseVideo) player.pauseVideo();
-                localPlayer.currentTime = 0;
-            } else {
-                localPlayer.pause();
-                player.loadVideoById(playlist[currentTrack].id);
-            }
-        }
+        // Initialize UI
+        updateUI();
     </script>
 
     <script type="importmap">
