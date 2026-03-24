@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Feliz Día de las Flores Amarillas | Galaxia 3D</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Overlay de Entrada para Autoplay -->
+    <div id="entry-overlay" class="white-theme">
+        <div class="entry-content">
+            <h1>Bienvenida a la Galaxia Blanca</h1>
+            <button id="btn-enter" class="btn-enter">Empezar Viaje ✨</button>
+        </div>
+    </div>
+    <nav class="galaxy-nav">
+        <a href="index.html" class="galaxy-link" id="link-yellow">🌻 Galaxia Amarilla</a>
+        <a href="blue.html" class="galaxy-link" id="link-blue">💙 Galaxia Azul</a>
+        <a href="red.html" class="galaxy-link" id="link-red">🌹 Galaxia Roja</a>
+        <a href="white.html" class="galaxy-link" id="link-white">🖤 Galaxia Blanca</a>
+    </nav>
+
+    <!-- Menú Desplegable de Degradados -->
+    <div class="theme-dropdown-container">
+        <label for="galaxyThemeSelect" class="theme-dropdown-label">✨ escoge tu color preferido linda... ✨</label>
+        <select id="galaxyThemeSelect" class="theme-dropdown-select" onchange="window.setWhiteGalaxyTheme(this.value)">
+            <optgroup label="🖤 Elegancia Oscura & Monocromáticos">
+                <option value="monochrome" selected>Monocromático Clásico (B&N)</option>
+                <option value="silver_dust">Polvo de Plata</option>
+                <option value="obsidian">Obsidiana Profunda</option>
+                <option value="platinum">Platino Metálico</option>
+                <option value="pearl">Luz de Perla</option>
+                <option value="starlight">Resplandor Estelar Puro</option>
+                <option value="rose_ash">Ceniza de Rosa (Gris Rosado)</option>
+                <option value="midnight_blue">Azul Medianoche Oscuro</option>
+                <option value="sepia_dream">Sueño Sepia (Antiguo)</option>
+            </optgroup>
+            <optgroup label="🎨 Universos de Color Mágicos">
+                <option value="gold">Dorado Incandescente</option>
+                <option value="purple">Morado y Zafiro</option>
+                <option value="magenta_green">Magenta a Aqua (Diamante)</option>
+                <option value="blue_green">Cian a Esmeralda</option>
+                <option value="ruby_rose">Rosa Rubí Apasionado</option>
+                <option value="twilight">Ocaso Cósmico</option>
+                <option value="neon_cyber">Neón Cyberpunk</option>
+                <option value="mint_frost">Menta Helada (Invierno)</option>
+                <option value="solar_flare">Llamarada Solar Fuego</option>
+            </optgroup>
+        </select>
+    </div>
+
+    <!-- Solo mensaje de feliz día, sin panel -->
+    <div class="greeting">
+        🖤 TODAS LAS FLORES NEGRAS PARA TI PRINCESA 🖤
+        <small>✨ Un universo de estrellas BLANCAS para ti ✨</small>
+    </div>
+
+    <div class="badge-control">🌀 360° | Galaxia de Flores Negras</div>
+    <div class="control-hint">🖱️ Arrastra para rotar | Click en una flor para un mensaje</div>
+
+    <!-- Carta de Amor (Emergente) -->
+    <div id="love-letter" class="love-letter-overlay" onclick="closeLoveLetter()">
+        <div class="love-letter-paper" onclick="event.stopPropagation()">
+            <div class="wax-seal">💙</div>
+            <p id="letter-content">Mensaje de amor</p>
+            <button class="close-btn" onclick="closeLoveLetter()">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Carta Especial (Centro) -->
+    <div id="special-letter" class="love-letter-overlay special" onclick="closeSpecialLetter()">
+        <div class="love-letter-paper" onclick="event.stopPropagation()">
+            <div class="wax-seal">💙</div>
+            <h2 class="special-title">Para ti, mi universo</h2>
+            <div id="special-content">
+                <p>En el vasto silencio del cosmos lejano,</p>
+                <p>donde orbitan estrellas en danza sutil,</p>
+                <p>fue tu luz la que vino a tomarme la mano,</p>
+                <p>transformando mi noche en un dulce abril.</p>
+                <br>
+                <p>No hay flor en la tierra ni estrella en el cielo,</p>
+                <p>que iguale el misterio que esconde tu voz.</p>
+                <p>Eres tú mi galaxia, mi paz, mi consuelo,</p>
+                <p>el latido más bello que ha creado Dios.</p>
+            </div>
+            <button class="close-btn special-btn" onclick="closeSpecialLetter()">Guardar en el corazón</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('link-white').classList.add('active', 'white');
+    </script>
+
+    <div class="music-player" id="music-player">
+        <button class="player-btn" id="btn-prev">⏮</button>
+        <button class="player-btn" id="btn-play">▶️</button>
+        <button class="player-btn" id="btn-next">⏭</button>
+        <div class="track-info">
+            <span class="track-name" id="track-name">Cargando...</span>
+            <span class="track-status" id="track-status">Pausado</span>
+        </div>
+    </div>
+    <audio id="local-audio-player" src="cancion_blanca_1.mp3"></audio>
+    <script>
+        const playlist = [
+            { src: 'cancion_blanca_1.mp3', name: 'cancion principal' },
+            { src: 'cancion_blanca_2.mp3', name: 'segunda cancion' }
+        ];
+        let currentTrack = 0;
+
+        const localPlayer = document.getElementById('local-audio-player');
+        const btnPlay = document.getElementById('btn-play');
+        const statusText = document.getElementById('track-status');
+        const trackNameText = document.getElementById('track-name');
+
+        function updateUI() {
+            trackNameText.innerText = playlist[currentTrack].name;
+        }
+
+        localPlayer.addEventListener('play', () => { btnPlay.innerText = '⏸'; statusText.innerText = 'Reproduciendo'; });
+        localPlayer.addEventListener('pause', () => { btnPlay.innerText = '▶️'; statusText.innerText = 'Pausado'; });
+        localPlayer.addEventListener('ended', nextTrack);
+
+        document.getElementById('btn-enter').addEventListener('click', () => {
+            document.getElementById('entry-overlay').classList.add('hidden');
+            if (localPlayer.src && localPlayer.src.includes(playlist[currentTrack].src)) {
+                localPlayer.play();
+            } else {
+                localPlayer.src = playlist[currentTrack].src;
+                updateUI();
+                localPlayer.play();
+            }
+        });
+
+        btnPlay.addEventListener('click', () => {
+            if (!localPlayer.src || localPlayer.src.endsWith('undefined') || localPlayer.src === window.location.href) {
+                localPlayer.src = playlist[currentTrack].src;
+            }
+            localPlayer.paused ? localPlayer.play() : localPlayer.pause();
+        });
+
+        document.getElementById('btn-next').addEventListener('click', nextTrack);
+        document.getElementById('btn-prev').addEventListener('click', prevTrack);
+
+        function nextTrack() {
+            currentTrack = (currentTrack + 1) % playlist.length;
+            loadTrack();
+        }
+        function prevTrack() {
+            currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
+            loadTrack();
+        }
+        function loadTrack() {
+            localPlayer.src = playlist[currentTrack].src;
+            updateUI();
+            localPlayer.play();
+        }
+
+        // Initialize UI
+        updateUI();
+    </script>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module" src="main_white.js"></script>
+</body>
+
+</html>
